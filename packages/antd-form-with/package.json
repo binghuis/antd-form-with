@@ -4,20 +4,22 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "release": "release-it"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
-    "@types/lodash-es": "^4.17.7",
-    "@types/react": "^18.0.35",
     "antd": "^5.4.2",
     "lodash-es": "^4.17.21",
     "react": "^18.2.0"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.7",
+    "@types/react": "^18.0.35",
+    "release-it": "^15.10.1",
     "terser": "^5.17.1",
     "tsup": "^6.7.0"
   },
