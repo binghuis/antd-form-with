@@ -6,6 +6,8 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   dts: true,
-  format: ["cjs", "esm", "iife"],
-  legacyOutput: true,
+  format: ["esm"],
+  // legacyOutput: true,
+  minify: "terser",
+  treeshake: true,
 });

@@ -33,7 +33,7 @@ export const withModal = <FormVal extends PlainObject>(
       data: FormVal;
       record: PlainObject;
     }) => Promise<void>;
-    onError?: VoidFunction;
+    onError?: Function;
   }
 ) => {
   const {

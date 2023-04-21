@@ -28,7 +28,7 @@ declare const withModal: <FormVal extends PlainObject>(props?: (Partial<Omit<Mod
         data: FormVal;
         record: PlainObject;
     }) => Promise<void>) | undefined;
-    onError?: VoidFunction | undefined;
+    onError?: Function | undefined;
 }) | undefined) => (FormComponent: React.ComponentType<{
     form: FormInstance;
     mode: FormMode;
