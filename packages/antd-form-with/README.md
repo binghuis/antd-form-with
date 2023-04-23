@@ -1,4 +1,4 @@
-<p align="center">
+<div align="center">
 
 Quickly and conveniently combine `Antd Form` with other components.
 
@@ -10,7 +10,7 @@ Quickly and conveniently combine `Antd Form` with other components.
 
 <!-- [![npm bundle size](https://img.shields.io/bundlephobia/minzip/antd-form-with?style=flat-square)](https://bundlephobia.com/result?p=antd-form-with) -->
 
-</p>
+</div>
 
 ---
 
