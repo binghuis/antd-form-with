@@ -1,6 +1,6 @@
 {
   "name": "antd-form-with",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Quickly and conveniently combine Antd Form with other components.",
   "module": "dist/index.mjs",
   "type": "module",
