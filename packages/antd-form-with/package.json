@@ -1,6 +1,6 @@
 {
   "name": "antd-form-with",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "",
   "module": "dist/index.mjs",
   "type": "module",
