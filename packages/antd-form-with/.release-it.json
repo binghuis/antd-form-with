@@ -1,14 +1,10 @@
 {
     "git": {
         "tagName": "v${version}",
-        "tagAnnotation": "Release version ${version}",
-        "commitMessage": "release: v${version}",
-        "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs",
-        "push": true
+        "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
     },
     "github": {
         "release": true,
-        "releaseName": "Release ${version}",
         "releaseNotes": "echo \"${changelog}\" | sed 's|TAG|v${version}|'",
         "web": true,
         "skipLibCheck": true
