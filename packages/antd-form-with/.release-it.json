@@ -1,12 +1,15 @@
 {
     "git": {
         "tagName": "v${version}",
-        "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.githubusercontent.com/release-it/release-it/main/templates/changelog-compact.hbs"
+        "changelog": "npx auto-changelog --stdout --commit-limit false --unreleased --template https://raw.gitmirror.com/release-it/release-it/main/templates/changelog-compact.hbs"
     },
     "github": {
         "release": true,
         "releaseNotes": "echo \"${changelog}\" | sed 's|TAG|v${version}|'",
         "web": true,
+        "comments": {
+            "submit": true
+        },
         "skipLibCheck": true
     },
     "hooks": {
