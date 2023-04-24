@@ -18,7 +18,7 @@ English · [简体中文](./packages/antd-form-with/README.zh-CN.md)
 
 ## Installation
 
-You can use pnpm to install antd-form-with:
+You can use pnpm to install `antd-form-with`:
 
 ```
 pnpm i antd-form-with -D
