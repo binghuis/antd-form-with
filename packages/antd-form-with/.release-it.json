@@ -1,5 +1,4 @@
 {
-    "npm": true,
     "git": {
         "tagName": "v${version}",
         "tagAnnotation": "Release version ${version}",
