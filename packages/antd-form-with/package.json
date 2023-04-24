@@ -21,14 +21,14 @@
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "tsup",
-    "release": "release-it"
-  },
   "peerDependencies": {
     "antd": ">=5.0.0",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "release": "release-it"
   },
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -39,6 +39,7 @@
   "devDependencies": {
     "@types/lodash-es": "^4.17.7",
     "@types/react": "^18.0.35",
+    "auto-changelog": "^2.4.0",
     "release-it": "^15.10.1",
     "terser": "^5.17.1",
     "tsup": "^6.7.0"

@@ -7,7 +7,7 @@ export default defineConfig({
   clean: true,
   dts: true,
   format: ["esm"],
-  // legacyOutput: true,
   minify: "terser",
   treeshake: true,
+  // legacyOutput: true,
 });
