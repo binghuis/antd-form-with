@@ -2,8 +2,22 @@
   "name": "antd-form-with",
   "version": "0.0.8",
   "description": "Quickly and conveniently combine Antd Form with other components.",
-  "module": "dist/index.mjs",
   "type": "module",
+  "license": "MIT",
+  "author": "binghuis <soongbinghui@gmail.com> (https://github.com/binghuis)",
+  "homepage": "https://github.com/binghuis/antd-form-with",
+  "repository": "https://github.com/binghuis/antd-form-with",
+  "bugs": "https://github.com/binghuis/antd-form-with/issues",
+  "keywords": [
+    "react",
+    "ant-design",
+    "form",
+    "modal",
+    "table",
+    "antd-form-with"
+  ],
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -11,9 +25,6 @@
     "build": "tsup",
     "release": "release-it"
   },
-  "keywords": [],
-  "author": "binghuis",
-  "license": "MIT",
   "peerDependencies": {
     "antd": ">=5.0.0",
     "react": ">=16.8.0",
