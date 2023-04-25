@@ -12,7 +12,7 @@ English · [简体中文](./packages/antd-form-with/README.zh-CN.md)
 ![npm peer dependency version](https://img.shields.io/npm/dependency-version/antd-form-with/peer/react?style=flat-square)
 ![npm peer dependency version](https://img.shields.io/npm/dependency-version/antd-form-with/peer/antd?style=flat-square)
 
-<!-- [![npm bundle size](https://img.shields.io/bundlephobia/minzip/antd-form-with?style=flat-square)](https://bundlephobia.com/result?p=antd-form-with) -->
+<!-- [![npm bundle size](https://img.shields.io/bundlephobia/minzip/antd-form-with?style=flat-square)](https://bundlephobia.com/package/antd-form-with) -->
 
 </div>
 
