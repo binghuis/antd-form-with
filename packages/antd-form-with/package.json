@@ -16,7 +16,7 @@
     "table",
     "antd-form-with"
   ],
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
