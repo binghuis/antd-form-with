@@ -16,6 +16,12 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+    },
   },
   "include": [
     "src/**/*"
