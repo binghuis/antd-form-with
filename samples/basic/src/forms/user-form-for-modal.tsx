@@ -3,7 +3,6 @@ import { FormMode } from "antd-form-with";
 
 const UserForm = (props: { form: FormInstance; mode: FormMode }) => {
   const { form, mode } = props;
-  console.log("mode:", mode);
 
   return (
     <Form form={form}>

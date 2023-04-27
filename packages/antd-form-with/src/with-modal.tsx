@@ -11,10 +11,6 @@ import useBoolean from "./hooks/use-boolean";
 import { FormMode, PlainObject } from "./types";
 import { getDisplayName } from "./util";
 
-export const useModalRef = <InitialValue extends PlainObject>() => {
-  return useRef<withModalRef<InitialValue>>(null);
-};
-
 type Title = ModalProps["title"];
 
 interface withModalRef<InitialValue> {
@@ -26,26 +22,19 @@ interface withModalRef<InitialValue> {
   }) => void;
 }
 
-export const withModal = <FormVal extends PlainObject>(
-  props?: Partial<Omit<ModalProps, "title">> & {
-    submit?: (params: {
-      mode: FormMode;
-      data: FormVal;
-      record: PlainObject;
-    }) => Promise<void>;
-    onError?: Function;
-  }
-) => {
-  const {
-    cancelText,
-    okText,
-    onError,
-    onOk,
-    onCancel,
-    destroyOnClose = true,
-    submit,
-    ...nestProps
-  } = props ?? {};
+export const useModalRef = <InitialValue extends PlainObject>() => {
+  return useRef<withModalRef<InitialValue>>(null);
+};
+
+export const withModal = <FormVal extends PlainObject>(params?: {
+  submit?: (params: {
+    mode: FormMode;
+    data: FormVal;
+    record: PlainObject;
+  }) => Promise<void>;
+  onError?: (e: Error) => void;
+}) => {
+  const { onError, submit } = params ?? {};
 
   return (
     FormComponent: React.ComponentType<{
@@ -54,17 +43,28 @@ export const withModal = <FormVal extends PlainObject>(
       data: Partial<FormVal>;
     }>
   ) => {
-    const WrappedFormComponent = forwardRef<withModalRef<FormVal>>((_, ref) => {
+    const ModalPlus = forwardRef<
+      withModalRef<FormVal>,
+      Partial<Omit<ModalProps, "title">>
+    >((props, ref) => {
+      const {
+        cancelText,
+        okText,
+        onOk,
+        onCancel,
+        destroyOnClose = true,
+        ...nestProps
+      } = props ?? {};
       const [title, setTitle] = useState<Title>();
-      const [mode, setMode] = useState<FormMode>(FormMode.View);
-      const [value, setValue] = useState<Partial<FormVal>>();
+      const [mode, setMode] = useState<FormMode>(FormMode.Add);
+      const [value, setValue] = useState<Partial<FormVal>>({});
       const [record, setRecord] = useState<PlainObject>({});
       const confirmLoading = useBoolean();
       const visible = useBoolean();
       const [form] = Form.useForm();
 
       const readOnly = useMemo(() => {
-        return mode === FormMode.View;
+        return mode === "view";
       }, [mode]);
 
       useImperativeHandle(ref, () => ({
@@ -105,11 +105,18 @@ export const withModal = <FormVal extends PlainObject>(
             }
             submit?.({ mode, data: form.getFieldsValue(), record })
               .then(() => {
-                confirmLoading.setFalse();
+                visible.setFalse();
                 onOk?.(e);
               })
-              .catch(() => {
-                onError?.();
+              .catch((e) => {
+                if (onError) {
+                  onError?.(e);
+                } else {
+                  throw new Error(e);
+                }
+              })
+              .finally(() => {
+                confirmLoading.setFalse();
               });
           }}
           destroyOnClose={destroyOnClose}
@@ -117,15 +124,13 @@ export const withModal = <FormVal extends PlainObject>(
           cancelText={cancelText}
           {...nestProps}
         >
-          <FormComponent form={form} mode={mode} data={value ?? {}} />
+          <FormComponent form={form} mode={mode} data={value} />
         </Modal>
       );
     });
 
-    WrappedFormComponent.displayName = `withModal(${getDisplayName(
-      FormComponent
-    )})`;
+    ModalPlus.displayName = `withModal(${getDisplayName(FormComponent)})`;
 
-    return WrappedFormComponent;
+    return ModalPlus;
   };
 };

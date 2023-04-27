@@ -2,8 +2,8 @@ import {
   withModal,
   withTable,
   useModalRef,
-  FormMode,
   useTableRef,
+  FormMode,
 } from "antd-form-with";
 import { Button, Tag, Space } from "antd";
 import "./App.css";
@@ -21,7 +21,6 @@ function App() {
   })(UserFormForModal);
 
   const UserFormWithTable = withTable({
-    FormComponent: UserFormForTable,
     service: async () => {
       return {
         list: [
@@ -50,7 +49,7 @@ function App() {
         total: 3,
       };
     },
-  });
+  })(UserFormForTable);
 
   return (
     <div className="App">
@@ -58,7 +57,7 @@ function App() {
       <Button
         onClick={() => {
           modalRef.current?.open({
-            title: "create",
+            title: "Create Modal",
             mode: FormMode.Add,
           });
         }}
@@ -67,6 +66,7 @@ function App() {
       </Button>
       <UserFormWithTable
         ref={tableRef}
+        rowKey={'key'}
         columns={[
           {
             title: "Name",
