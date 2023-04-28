@@ -13,6 +13,11 @@ import UserFormForTable from "./forms/user-form-for-table";
 function App() {
   const modalRef = useModalRef();
   const tableRef = useTableRef();
+  fetch("/api/users")
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    });
 
   const UserFormWithModal = withModal({
     async submit(params) {
@@ -66,7 +71,7 @@ function App() {
       </Button>
       <UserFormWithTable
         ref={tableRef}
-        rowKey={'key'}
+        rowKey={"key"}
         columns={[
           {
             title: "Name",
@@ -83,26 +88,6 @@ function App() {
             title: "Address",
             dataIndex: "address",
             key: "address",
-          },
-          {
-            title: "Tags",
-            key: "tags",
-            dataIndex: "tags",
-            render: (_, { tags }) => (
-              <>
-                {tags.map((tag) => {
-                  let color = tag.length > 5 ? "geekblue" : "green";
-                  if (tag === "loser") {
-                    color = "volcano";
-                  }
-                  return (
-                    <Tag color={color} key={tag}>
-                      {tag.toUpperCase()}
-                    </Tag>
-                  );
-                })}
-              </>
-            ),
           },
           {
             title: "Action",
