@@ -40,8 +40,10 @@ function App() {
   })(UserFormForModal);
 
   const UserFormWithTable = withTable({
-    service: async () => {
-      const data = await fetch("/api/users").then((res) => res.json());
+    service: async ({ current, pageSize, extra, filters, sorter }) => {
+      const data = await fetch(
+        `/api/users?current=${current}&pageSize=${pageSize}`
+      ).then((res) => res.json());
       return data;
     },
   })(UserFormForTable);

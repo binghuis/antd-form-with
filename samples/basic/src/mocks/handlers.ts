@@ -16,7 +16,13 @@ export const users: User[] = faker.helpers.multiple(createRandomUser, {
 
 export const handlers = [
   rest.get("/api/users", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json({ list: users, total: users.length }));
+    const current = parseInt(req.url.searchParams.get("current") ?? "1");
+    const pageSize = parseInt(req.url.searchParams.get("pageSize") ?? "10");
+    const start = (current - 1) * pageSize;
+    const end = start + pageSize;
+    const list = users.slice(start, end);
+    const total = users.length;
+    return res(ctx.status(200), ctx.json({ list, total }));
   }),
 
   rest.get("/api/users/:id", (req, res, ctx) => {
