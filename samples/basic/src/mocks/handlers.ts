@@ -1,11 +1,18 @@
 import { rest } from "msw";
+import { faker } from "@faker-js/faker";
 import { User } from "../types/user";
 
-const users: User[] = [
-  { id: 1, name: "Alice", age: 18 },
-  { id: 2, name: "Bob", age: 24 },
-  { id: 3, name: "Charlie", age: 32 },
-];
+export function createRandomUser(): User {
+  return {
+    id:  faker.number.int(),
+    name: faker.internet.userName(),
+    birthdate: faker.date.birthdate(),
+  };
+}
+
+export const users: User[] = faker.helpers.multiple(createRandomUser, {
+  count: 35,
+});
 
 export const handlers = [
   rest.get("/api/users", (req, res, ctx) => {

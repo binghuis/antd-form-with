@@ -5,7 +5,7 @@ import {
   useTableRef,
   FormMode,
 } from "antd-form-with";
-import { Button, Tag, Space } from "antd";
+import { Button, Space } from "antd";
 import "./App.css";
 import UserFormForModal from "./forms/user-form-for-modal";
 import UserFormForTable from "./forms/user-form-for-table";
@@ -13,11 +13,6 @@ import UserFormForTable from "./forms/user-form-for-table";
 function App() {
   const modalRef = useModalRef();
   const tableRef = useTableRef();
-  fetch("/api/users")
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-    });
 
   const UserFormWithModal = withModal({
     async submit(params) {
@@ -27,31 +22,10 @@ function App() {
 
   const UserFormWithTable = withTable({
     service: async () => {
+      const data = await fetch("/api/users").then((res) => res.json());
       return {
-        list: [
-          {
-            key: "1",
-            name: "John Brown",
-            age: 32,
-            address: "New York No. 1 Lake Park",
-            tags: ["nice", "developer"],
-          },
-          {
-            key: "2",
-            name: "Jim Green",
-            age: 42,
-            address: "London No. 1 Lake Park",
-            tags: ["loser"],
-          },
-          {
-            key: "3",
-            name: "Joe Black",
-            age: 32,
-            address: "Sydney No. 1 Lake Park",
-            tags: ["cool", "teacher"],
-          },
-        ],
-        total: 3,
+        list: data,
+        total: data.length,
       };
     },
   })(UserFormForTable);
@@ -59,41 +33,46 @@ function App() {
   return (
     <div className="App">
       <UserFormWithModal ref={modalRef} />
-      <Button
-        onClick={() => {
-          modalRef.current?.open({
-            title: "Create Modal",
-            mode: FormMode.Add,
-          });
-        }}
-      >
-        create
-      </Button>
+
       <UserFormWithTable
+        title={() => {
+          return (
+            <Button
+              onClick={() => {
+                modalRef.current?.open({
+                  title: "Create Modal",
+                  mode: FormMode.Add,
+                });
+              }}
+            >
+              New
+            </Button>
+          );
+        }}
         ref={tableRef}
         rowKey={"key"}
         columns={[
           {
+            title: "Id",
+            dataIndex: "id",
+            key: "id",
+          },
+          {
             title: "Name",
             dataIndex: "name",
             key: "name",
-            render: (text) => <a>{text}</a>,
+            render: (text) => text,
           },
           {
-            title: "Age",
-            dataIndex: "age",
-            key: "age",
-          },
-          {
-            title: "Address",
-            dataIndex: "address",
-            key: "address",
+            title: "Birthdate",
+            dataIndex: "birthdate",
+            key: "birthdate",
           },
           {
             title: "Action",
             key: "action",
             render: (_, record) => (
-              <Space size="middle">
+              <Space>
                 <a
                   onClick={() => {
                     modalRef.current?.open({
@@ -105,7 +84,17 @@ function App() {
                 >
                   edit
                 </a>
-                <a>Delete</a>
+                <a
+                  onClick={() => {
+                    modalRef.current?.open({
+                      title: "view",
+                      mode: FormMode.View,
+                      initialValue: record,
+                    });
+                  }}
+                >
+                  view
+                </a>
               </Space>
             ),
           },

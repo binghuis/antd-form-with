@@ -8,8 +8,8 @@ const UserForm = (props: { form: FormInstance }) => {
       form={form}
       labelCol={{
         md: { span: 8 },
-        lg: { span: 8 },
-        xl: { span: 5 },
+        lg: { span: 6 },
+        xl: { span: 6 },
         xxl: { span: 6 },
       }}
     >
