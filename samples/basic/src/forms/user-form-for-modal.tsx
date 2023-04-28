@@ -6,17 +6,17 @@ const UserForm = (props: { form: FormInstance; mode: FormMode }) => {
 
   return (
     <Form form={form}>
-      <Form.Item label="姓名" name={"name"} rules={[{ required: true }]}>
+      <Form.Item label="name" name={"name"} rules={[{ required: true }]}>
         <Input />
       </Form.Item>
-      <Form.Item label="年龄" name={"age"} rules={[{ required: true }]}>
+      <Form.Item label="age" name={"age"} rules={[{ required: true }]}>
         <InputNumber />
       </Form.Item>
-      <Form.Item label="性别" name={"sex"} rules={[{ required: true }]}>
+      <Form.Item label="sex" name={"sex"} rules={[{ required: true }]}>
         <Select
           options={[
-            { label: "男", value: "male" },
-            { label: "女", value: "female" },
+            { label: "male", value: "male" },
+            { label: "female", value: "female" },
           ]}
         />
       </Form.Item>

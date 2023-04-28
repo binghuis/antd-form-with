@@ -16,7 +16,10 @@ function App() {
 
   const UserFormWithModal = withModal({
     async submit(params) {
-      console.log(params);
+      fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify(params.data),
+      });
     },
   })(UserFormForModal);
 
@@ -38,6 +41,7 @@ function App() {
         title={() => {
           return (
             <Button
+              type="primary"
               onClick={() => {
                 modalRef.current?.open({
                   title: "Create Modal",
@@ -50,7 +54,7 @@ function App() {
           );
         }}
         ref={tableRef}
-        rowKey={"key"}
+        rowKey={"id"}
         columns={[
           {
             title: "Id",
@@ -64,9 +68,9 @@ function App() {
             render: (text) => text,
           },
           {
-            title: "Birthdate",
-            dataIndex: "birthdate",
-            key: "birthdate",
+            title: "Sex",
+            dataIndex: "sex",
+            key: "sex",
           },
           {
             title: "Action",

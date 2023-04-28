@@ -6,7 +6,7 @@ export function createRandomUser(): User {
   return {
     id:  faker.number.int(),
     name: faker.internet.userName(),
-    birthdate: faker.date.birthdate(),
+    sex: faker.person.sex(),
   };
 }
 
