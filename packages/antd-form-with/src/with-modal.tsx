@@ -21,6 +21,10 @@ interface withModalRef<InitialValue> {
     record?: PlainObject;
   }) => void;
 }
+interface ModalPlusProps extends Partial<Omit<ModalProps, "title" | "onOk">> {
+  onError?: (e: Error) => void;
+  onSuccess?: ModalProps["onOk"];
+}
 
 export const useModalRef = <InitialValue extends PlainObject>() => {
   return useRef<withModalRef<InitialValue>>(null);
@@ -31,10 +35,9 @@ export const withModal = <FormVal extends PlainObject>(params?: {
     mode: FormMode;
     data: FormVal;
     record: PlainObject;
-  }) => Promise<void>;
-  onError?: (e: Error) => void;
+  }) => Promise<void | "success">;
 }) => {
-  const { onError, submit } = params ?? {};
+  const { submit } = params ?? {};
 
   return (
     FormComponent: React.ComponentType<{
@@ -43,91 +46,96 @@ export const withModal = <FormVal extends PlainObject>(params?: {
       data: Partial<FormVal>;
     }>
   ) => {
-    const ModalPlus = forwardRef<
-      withModalRef<FormVal>,
-      Partial<Omit<ModalProps, "title">>
-    >((props, ref) => {
-      const {
-        cancelText,
-        okText,
-        onOk,
-        onCancel,
-        destroyOnClose = true,
-        ...nestProps
-      } = props ?? {};
-      const [title, setTitle] = useState<Title>();
-      const [mode, setMode] = useState<FormMode>(FormMode.Add);
-      const [value, setValue] = useState<Partial<FormVal>>({});
-      const [record, setRecord] = useState<PlainObject>({});
-      const confirmLoading = useBoolean();
-      const visible = useBoolean();
-      const [form] = Form.useForm();
+    const ModalPlus = forwardRef<withModalRef<FormVal>, ModalPlusProps>(
+      (props, ref) => {
+        const {
+          cancelText,
+          okText,
+          onCancel,
+          open = false,
+          destroyOnClose = true,
+          onError,
+          onSuccess,
+          ...nestProps
+        } = props ?? {};
+        const [title, setTitle] = useState<Title>();
+        const [mode, setMode] = useState<FormMode>(FormMode.Add);
+        const [value, setValue] = useState<Partial<FormVal>>({});
+        const [record, setRecord] = useState<PlainObject>({});
+        const confirmLoading = useBoolean();
+        const visible = useBoolean(open);
+        const [form] = Form.useForm();
 
-      const readOnly = useMemo(() => {
-        return mode === "view";
-      }, [mode]);
+        const readOnly = useMemo(() => {
+          return mode === "view";
+        }, [mode]);
 
-      useImperativeHandle(ref, () => ({
-        open: (openProps) => {
-          const { title, initialValue, mode, record = {} } = openProps;
-          if (!isEmpty(initialValue)) {
-            setValue(initialValue);
-            form.setFieldsValue(initialValue);
-          }
-          setRecord(record);
-          if (mode) {
-            setMode(mode);
-          }
-          setTitle(title);
-          visible.setTrue();
-        },
-      }));
-
-      return (
-        <Modal
-          title={title}
-          open={visible.state}
-          okText={okText}
-          onCancel={(e) => {
-            onCancel?.(e);
-            visible.setFalse();
-          }}
-          okButtonProps={{
-            style: { display: readOnly ? "none" : "inline-block" },
-          }}
-          cancelButtonProps={{ type: readOnly ? "primary" : "default" }}
-          onOk={async (e) => {
-            confirmLoading.setTrue();
-            const { errorFields } = await form.validateFields().catch(identity);
-            if (errorFields) {
-              confirmLoading.setFalse();
-              return;
+        useImperativeHandle(ref, () => ({
+          open: (openProps) => {
+            const { title, initialValue, mode, record = {} } = openProps;
+            if (!isEmpty(initialValue)) {
+              setValue(initialValue);
+              form.setFieldsValue(initialValue);
             }
-            submit?.({ mode, data: form.getFieldsValue(), record })
-              .then(() => {
-                visible.setFalse();
-                onOk?.(e);
-              })
-              .catch((e) => {
-                if (onError) {
-                  onError?.(e);
-                } else {
-                  throw new Error(e);
-                }
-              })
-              .finally(() => {
+            setRecord(record);
+            if (mode) {
+              setMode(mode);
+            }
+            setTitle(title);
+            visible.setTrue();
+          },
+        }));
+
+        return (
+          <Modal
+            title={title}
+            open={visible.state}
+            okText={okText}
+            onCancel={(e) => {
+              onCancel?.(e);
+              visible.setFalse();
+            }}
+            okButtonProps={{
+              style: { display: readOnly ? "none" : "inline-block" },
+            }}
+            cancelButtonProps={{ type: readOnly ? "primary" : "default" }}
+            onOk={async (e) => {
+              confirmLoading.setTrue();
+              const { errorFields } = await form
+                .validateFields()
+                .catch(identity);
+              if (errorFields) {
                 confirmLoading.setFalse();
-              });
-          }}
-          destroyOnClose={destroyOnClose}
-          confirmLoading={confirmLoading.state}
-          cancelText={cancelText}
-          {...nestProps}
-        >
-          <FormComponent form={form} mode={mode} data={value} />
-        </Modal>
-      );
-    });
+                return;
+              }
+              submit?.({ mode, data: form.getFieldsValue(), record })
+                .then((status) => {
+                  if (status === "success") {
+                    visible.setFalse();
+                    onSuccess?.(e);
+                  }
+                })
+                .catch((e) => {
+                  if (onError) {
+                    onError?.(e);
+                  } else {
+                    throw new Error(e);
+                  }
+                })
+                .finally(() => {
+                  confirmLoading.setFalse();
+                });
+            }}
+            destroyOnClose={destroyOnClose}
+            confirmLoading={confirmLoading.state}
+            cancelText={cancelText}
+            {...nestProps}
+          >
+            <FormComponent form={form} mode={mode} data={value} />
+          </Modal>
+        );
+      }
+    );
 
     ModalPlus.displayName = `withModal(${getDisplayName(FormComponent)})`;
 

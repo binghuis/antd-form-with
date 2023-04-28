@@ -15,12 +15,12 @@ const UserForm = (props: { form: FormInstance }) => {
     >
       <Row>
         <Col md={12} lg={8} xl={8} xxl={6}>
-          <Form.Item label="用户ID" name="userId" style={{ marginBottom: 8 }}>
+          <Form.Item label="uuid" name="userId" style={{ marginBottom: 8 }}>
             <Input></Input>
           </Form.Item>
         </Col>
         <Col md={12} lg={8} xl={8} xxl={6}>
-          <Form.Item label="手机号" name="phone" style={{ marginBottom: 8 }}>
+          <Form.Item label="phone" name="phone" style={{ marginBottom: 8 }}>
             <Input></Input>
           </Form.Item>
         </Col>

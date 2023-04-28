@@ -5,7 +5,7 @@ import {
   useTableRef,
   FormMode,
 } from "antd-form-with";
-import { Button, Space } from "antd";
+import { Button, Space, message } from "antd";
 import "./App.css";
 import UserFormForModal from "./forms/user-form-for-modal";
 import UserFormForTable from "./forms/user-form-for-table";
@@ -15,27 +15,45 @@ function App() {
   const tableRef = useTableRef();
 
   const UserFormWithModal = withModal({
-    async submit(params) {
-      fetch("/api/users", {
-        method: "POST",
-        body: JSON.stringify(params.data),
-      });
+    async submit({ mode, data, record }) {
+      if (mode === FormMode.Add) {
+        const res = await fetch("/api/users", {
+          method: "POST",
+          body: JSON.stringify(data),
+        }).then((res) => res.json());
+        if (res.code === "success") {
+          return "success";
+        }
+      }
+      if (mode === FormMode.Edit) {
+        const res = await fetch(`/api/users/${record.id}`, {
+          method: "PUT",
+          body: JSON.stringify({ ...data, id: record.id }),
+        }).then((res) => res.json());
+        if (res.code === "success") {
+          return "success";
+        } else {
+          message.error(res.message);
+        }
+      }
     },
   })(UserFormForModal);
 
   const UserFormWithTable = withTable({
     service: async () => {
       const data = await fetch("/api/users").then((res) => res.json());
-      return {
-        list: data,
-        total: data.length,
-      };
+      return data;
     },
   })(UserFormForTable);
 
   return (
     <div className="App">
-      <UserFormWithModal ref={modalRef} />
+      <UserFormWithModal
+        ref={modalRef}
+        onSuccess={() => {
+          tableRef.current?.refresh();
+        }}
+      />
 
       <UserFormWithTable
         title={() => {
@@ -83,6 +101,7 @@ function App() {
                       title: "edit",
                       mode: FormMode.Edit,
                       initialValue: record,
+                      record,
                     });
                   }}
                 >
@@ -98,6 +117,21 @@ function App() {
                   }}
                 >
                   view
+                </a>
+                <a
+                  onClick={async () => {
+                    const res = await fetch(`/api/users/${record.id}`, {
+                      method: "DELETE",
+                    }).then((res) => res.json());
+                    if (res.code === "success") {
+                      message.success(res.message);
+                      tableRef.current?.refresh();
+                    } else {
+                      message.error(res.message);
+                    }
+                  }}
+                >
+                  del
                 </a>
               </Space>
             ),

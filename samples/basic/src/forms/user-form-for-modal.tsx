@@ -1,16 +1,13 @@
-import { FormInstance, Form, Input, InputNumber, Select } from "antd";
+import { FormInstance, Form, Input, Select } from "antd";
 import { FormMode } from "antd-form-with";
 
 const UserForm = (props: { form: FormInstance; mode: FormMode }) => {
   const { form, mode } = props;
 
   return (
-    <Form form={form}>
+    <Form form={form} disabled={mode === FormMode.View}>
       <Form.Item label="name" name={"name"} rules={[{ required: true }]}>
         <Input />
-      </Form.Item>
-      <Form.Item label="age" name={"age"} rules={[{ required: true }]}>
-        <InputNumber />
       </Form.Item>
       <Form.Item label="sex" name={"sex"} rules={[{ required: true }]}>
         <Select

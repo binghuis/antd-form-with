@@ -13,7 +13,6 @@ interface TablePlusSearcher {
 
 const TableSearcher: React.FC<TablePlusSearcher> = (props) => {
   const { search, reset, FormComponent, resetLoading, searchLoading } = props;
-  const fold = useBoolean();
   return (
     <Row justify={"space-between"} gutter={8} wrap={false}>
       <Col flex={1}>{FormComponent}</Col>
