@@ -93,6 +93,7 @@ export const withModal = <FormVal extends PlainObject>(params?: {
             okText={okText}
             onCancel={(e) => {
               onCancel?.(e);
+              form.resetFields()
               visible.setFalse();
             }}
             okButtonProps={{

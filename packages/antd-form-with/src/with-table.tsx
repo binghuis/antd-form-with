@@ -131,7 +131,13 @@ export const withTable = <RecordType extends PlainObject>(params: {
       useImperativeHandle(ref, () => ({
         refresh() {
           loading.setTrue();
-          setPagination((pagination) => ({ ...pagination, current: 1 }));
+          fetchData({
+            ...pagination,
+            current: 1,
+            filters: filterVal,
+            sorter: sorterVal,
+            extra: formVal,
+          });
         },
       }));
 
