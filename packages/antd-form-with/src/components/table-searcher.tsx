@@ -53,4 +53,4 @@ const TableSearcher: React.FC<TablePlusSearcher> = (props) => {
     </Row>
   );
 };
-export default TableSearcher;
+export default React.memo(TableSearcher);

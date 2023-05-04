@@ -93,7 +93,7 @@ export const withModal = <FormVal extends PlainObject>(params?: {
             okText={okText}
             onCancel={(e) => {
               onCancel?.(e);
-              form.resetFields()
+              form.resetFields();
               visible.setFalse();
             }}
             okButtonProps={{
@@ -140,6 +140,6 @@ export const withModal = <FormVal extends PlainObject>(params?: {
 
     ModalPlus.displayName = `withModal(${getDisplayName(FormComponent)})`;
 
-    return ModalPlus;
+    return React.memo(ModalPlus);
   };
 };

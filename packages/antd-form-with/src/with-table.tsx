@@ -12,7 +12,7 @@ import useBoolean from "./hooks/use-boolean";
 import React from "react";
 import TableSearcher from "./components/table-searcher";
 import { PlainObject } from "./types";
-import { filterNonEmpty } from "./util";
+import { filterNonEmpty, getDisplayName } from "./util";
 
 export const useTableRef = () => {
   return useRef<withTableRef>(null);
@@ -183,6 +183,11 @@ export const withTable = <RecordType extends PlainObject>(params: {
         );
       }
     );
-    return TablePlus;
+
+    TablePlus.displayName = `withTable(${
+      FormComponent ? getDisplayName(FormComponent) : "null"
+    })`;
+
+    return React.memo(TablePlus);
   };
 };
