@@ -45,6 +45,12 @@ interface withTableRef {
   refresh: () => void;
 }
 
+interface TablePlusProps<RecordType>
+  extends Omit<
+    TableProps<RecordType>,
+    "dataSource" | "pagination" | "onChange" | "loading"
+  > {}
+
 export const withTable = <RecordType extends PlainObject>(params: {
   pageSize?: number;
   service: Service<RecordType>;
@@ -106,74 +112,77 @@ export const withTable = <RecordType extends PlainObject>(params: {
       form: FormInstance;
     }>
   ) => {
-    const TablePlus = forwardRef<
-      withTableRef,
-      Omit<
-        TableProps<RecordType>,
-        "dataSource" | "pagination" | "onChange" | "loading"
-      >
-    >((TablePlusProps, ref) => {
-      const { rowKey = "id", sticky = true, ...nestProps } = TablePlusProps;
+    const TablePlus = forwardRef<withTableRef, TablePlusProps<RecordType>>(
+      (props, ref) => {
+        const { rowKey = "id", sticky = true, title, ...nestProps } = props;
 
-      const reset = () => {
-        resetLoading.setTrue();
-        setPagination((pagination) => ({ ...pagination, current: 1 }));
-        form.resetFields();
-        setFormVal({});
-      };
+        const reset = () => {
+          resetLoading.setTrue();
+          setPagination((pagination) => ({ ...pagination, current: 1 }));
+          form.resetFields();
+          setFormVal({});
+        };
 
-      const search = () => {
-        searchLoading.setTrue();
-        setPagination((pagination) => ({ ...pagination, current: 1 }));
-        setFormVal(filterNonEmpty(form.getFieldsValue()));
-      };
+        const search = () => {
+          searchLoading.setTrue();
+          setPagination((pagination) => ({ ...pagination, current: 1 }));
+          setFormVal(filterNonEmpty(form.getFieldsValue()));
+        };
 
-      useImperativeHandle(ref, () => ({
-        refresh() {
-          loading.setTrue();
-          fetchData({
-            ...pagination,
-            current: 1,
-            filters: filterVal,
-            sorter: sorterVal,
-            extra: formVal,
-          });
-        },
-      }));
+        useImperativeHandle(ref, () => ({
+          refresh() {
+            loading.setTrue();
+            fetchData({
+              ...pagination,
+              current: 1,
+              filters: filterVal,
+              sorter: sorterVal,
+              extra: formVal,
+            });
+          },
+        }));
 
-      return (
-        <div>
-          {FormComponent && (
-            <TableSearcher
-              FormComponent={<FormComponent form={form} />}
-              searchLoading={searchLoading.state}
-              resetLoading={resetLoading.state}
-              reset={reset}
-              search={search}
+        return (
+          <div>
+            {FormComponent && (
+              <TableSearcher
+                FormComponent={<FormComponent form={form} />}
+                searchLoading={searchLoading.state}
+                resetLoading={resetLoading.state}
+                reset={reset}
+                search={search}
+              />
+            )}
+            <Table<RecordType>
+              {...nestProps}
+              rowKey={rowKey}
+              title={(list) => {
+                return <div style={{ textAlign: "left" }}>{title?.(list)}</div>;
+              }}
+              sticky={sticky}
+              loading={loading.state}
+              dataSource={data}
+              pagination={{ ...pagination, showQuickJumper: true }}
+              onChange={(pagination, filters, sorter, { action }) => {
+                if (action === "filter") {
+                  setFilterVal(filters);
+                }
+                if (action === "sort") {
+                  setSorterVal(sorter);
+                }
+                setPagination(
+                  pick(pagination, [
+                    "current",
+                    "pageSize",
+                    "total",
+                  ]) as Pagination
+                );
+              }}
             />
-          )}
-          <Table<RecordType>
-            {...nestProps}
-            rowKey={rowKey}
-            sticky={sticky}
-            loading={loading.state}
-            dataSource={data}
-            pagination={{ ...pagination, showQuickJumper: true }}
-            onChange={(pagination, filters, sorter, { action }) => {
-              if (action === "filter") {
-                setFilterVal(filters);
-              }
-              if (action === "sort") {
-                setSorterVal(sorter);
-              }
-              setPagination(
-                pick(pagination, ["current", "pageSize", "total"]) as Pagination
-              );
-            }}
-          />
-        </div>
-      );
-    });
+          </div>
+        );
+      }
+    );
     return TablePlus;
   };
 };
