@@ -114,7 +114,7 @@ export const withTable = <RecordType extends PlainObject>(params: {
   ) => {
     const TablePlus = forwardRef<withTableRef, TablePlusProps<RecordType>>(
       (props, ref) => {
-        const { rowKey = "id", sticky = true, title, ...nestProps } = props;
+        const { rowKey = "id", title, ...nestProps } = props;
 
         const reset = () => {
           resetLoading.setTrue();
@@ -159,7 +159,6 @@ export const withTable = <RecordType extends PlainObject>(params: {
               title={(list) => {
                 return <div style={{ textAlign: "left" }}>{title?.(list)}</div>;
               }}
-              sticky={sticky}
               loading={loading.state}
               dataSource={data}
               pagination={{ ...pagination, showQuickJumper: true }}
