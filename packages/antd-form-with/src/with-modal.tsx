@@ -92,9 +92,9 @@ export const withModal = <FormVal extends PlainObject>(params?: {
             open={visible.state}
             okText={okText}
             onCancel={(e) => {
-              onCancel?.(e);
-              form.resetFields();
               visible.setFalse();
+              form.resetFields();
+              onCancel?.(e);
             }}
             okButtonProps={{
               style: { display: readOnly ? "none" : "inline-block" },
