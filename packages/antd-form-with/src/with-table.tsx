@@ -157,7 +157,7 @@ export const withTable = <RecordType extends PlainObject>(params: {
               {...nestProps}
               rowKey={rowKey}
               title={(list) => {
-                return <div style={{ textAlign: "left" }}>{title?.(list)}</div>;
+                return <div>{title?.(list)}</div>;
               }}
               loading={loading.state}
               dataSource={data}
