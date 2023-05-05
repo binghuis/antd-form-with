@@ -14,11 +14,5 @@
     },
     "hooks": {
         "after:bump": "npx auto-changelog -p"
-    },
-    "plugins": {
-        "@release-it/bumper": {
-            "in": "package.json",
-            "out": "../../samples/*/package.json"
-        }
     }
 }
