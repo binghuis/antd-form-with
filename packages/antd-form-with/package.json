@@ -1,6 +1,6 @@
 {
   "name": "antd-form-with",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Quickly and conveniently combine Antd Form with other components.",
   "type": "module",
   "license": "MIT",
