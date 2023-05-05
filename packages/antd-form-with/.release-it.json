@@ -17,6 +17,7 @@
     },
     "plugins": {
         "@release-it/bumper": {
+            "in": "package.json",
             "out": "samples/*/package.json"
         }
     }
