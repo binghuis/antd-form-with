@@ -16,17 +16,8 @@
         "after:bump": "npx auto-changelog -p"
     },
     "plugins": {
-        "@release-it-plugins/workspaces": {
-            "workspaces": [
-                "packages/*"
-            ],
-            "additionalManifests": {
-                "dependencyUpdates": [
-                    "samples/*/package.json"
-                ],
-                "versionUpdates": []
-            },
-            "skipChecks": true
+        "@release-it/bumper": {
+            "out": "samples/*/package.json"
         }
     }
 }
