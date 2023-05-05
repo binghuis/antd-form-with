@@ -97,7 +97,7 @@ function App() {
             key: "action",
             render: (_, record) => (
               <Space>
-                <a
+                <button
                   onClick={() => {
                     modalRef.current?.open({
                       title: "edit",
@@ -108,8 +108,8 @@ function App() {
                   }}
                 >
                   edit
-                </a>
-                <a
+                </button>
+                <button
                   onClick={() => {
                     modalRef.current?.open({
                       title: "view",
@@ -119,8 +119,8 @@ function App() {
                   }}
                 >
                   view
-                </a>
-                <a
+                </button>
+                <button
                   onClick={async () => {
                     const res = await fetch(`/api/users/${record.id}`, {
                       method: "DELETE",
@@ -134,7 +134,7 @@ function App() {
                   }}
                 >
                   del
-                </a>
+                </button>
               </Space>
             ),
           },

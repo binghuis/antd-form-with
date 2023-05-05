@@ -45,11 +45,10 @@ interface withTableRef {
   refresh: () => void;
 }
 
-interface TablePlusProps<RecordType>
-  extends Omit<
-    TableProps<RecordType>,
-    "dataSource" | "pagination" | "onChange" | "loading"
-  > {}
+type TablePlusProps<RecordType> = Omit<
+  TableProps<RecordType>,
+  "dataSource" | "pagination" | "onChange" | "loading"
+>;
 
 export const withTable = <RecordType extends PlainObject>(params: {
   pageSize?: number;
