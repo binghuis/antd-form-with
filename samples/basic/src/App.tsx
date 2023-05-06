@@ -1,14 +1,14 @@
-import {
-  withModal,
-  withTable,
-  useModalRef,
-  useTableRef,
-  FormMode,
-} from "antd-form-with";
-import { Button, Space, message } from "antd";
 import "./App.css";
 import UserFormForModal from "./forms/user-form-for-modal";
 import UserFormForTable from "./forms/user-form-for-table";
+import { Button, Space, message } from "antd";
+import {
+  FormMode,
+  useModalRef,
+  useTableRef,
+  withModal,
+  withTable,
+} from "antd-form-with";
 
 function App() {
   const modalRef = useModalRef();

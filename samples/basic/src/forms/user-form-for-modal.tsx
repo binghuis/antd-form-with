@@ -1,4 +1,4 @@
-import { FormInstance, Form, Input, Select } from "antd";
+import { Form, FormInstance, Input, Select } from "antd";
 import { FormMode } from "antd-form-with";
 
 const UserForm = (props: { form: FormInstance; mode: FormMode }) => {

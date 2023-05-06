@@ -11,5 +11,11 @@
 	},
 	"formatter": {
 		"enabled": true
+	},
+	"files": {
+		"ignore": [
+			"**/*/*.js",
+			"dist"
+		]
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "check": "rome check ./",
+    "format": "rome format ./"
+  },
+  "devDependencies": {
+    "rome": "12.0.0"
+  }
+}

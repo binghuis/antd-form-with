@@ -2,6 +2,12 @@ lockfileVersion: '6.0'
 
 importers:
 
+  .:
+    devDependencies:
+      rome:
+        specifier: 12.0.0
+        version: 12.0.0
+
   packages/antd-form-with:
     dependencies:
       '@ant-design/icons':
@@ -29,9 +35,6 @@ importers:
       release-it:
         specifier: ^15.10.1
         version: 15.10.1(typescript@4.9.3)
-      rome:
-        specifier: 12.0.0
-        version: 12.0.0
       terser:
         specifier: ^5.17.1
         version: 5.17.1

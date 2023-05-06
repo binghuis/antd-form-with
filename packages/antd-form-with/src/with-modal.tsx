@@ -1,3 +1,8 @@
+import useBoolean from "./hooks/use-boolean";
+import { FormMode, PlainObject } from "./types";
+import { getDisplayName } from "./util";
+import { Form, FormInstance, Modal, ModalProps } from "antd";
+import { identity, isEmpty } from "lodash-es";
 import React, {
   forwardRef,
   useImperativeHandle,
@@ -5,11 +10,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Modal, ModalProps, Form, FormInstance } from "antd";
-import { identity, isEmpty } from "lodash-es";
-import useBoolean from "./hooks/use-boolean";
-import { FormMode, PlainObject } from "./types";
-import { getDisplayName } from "./util";
 
 type Title = ModalProps["title"];
 

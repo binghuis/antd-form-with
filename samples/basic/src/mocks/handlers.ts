@@ -1,6 +1,6 @@
-import { rest } from "msw";
-import { faker } from "@faker-js/faker";
 import { User } from "../types/user";
+import { faker } from "@faker-js/faker";
+import { rest } from "msw";
 
 export function createRandomUser(): User {
   return {

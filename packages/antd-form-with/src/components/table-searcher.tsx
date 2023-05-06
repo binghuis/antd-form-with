@@ -1,7 +1,7 @@
+import useBoolean from "../hooks/use-boolean";
 import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Space, Tooltip } from "antd";
 import React from "react";
-import useBoolean from "../hooks/use-boolean";
 
 interface TablePlusSearcher {
   search: () => void;
