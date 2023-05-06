@@ -14,7 +14,7 @@
 	},
 	"files": {
 		"ignore": [
-			"**/*/*.js",
+			"public",
 			"dist"
 		]
 	}
