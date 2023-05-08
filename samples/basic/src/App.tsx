@@ -1,14 +1,14 @@
-import "./App.css";
-import UserFormForModal from "./forms/user-form-for-modal";
-import UserFormForTable from "./forms/user-form-for-table";
-import { Button, Space, message } from "antd";
+import './App.css';
+import UserFormForModal from './forms/user-form-for-modal';
+import UserFormForTable from './forms/user-form-for-table';
+import { Button, Space, message } from 'antd';
 import {
   FormMode,
   useModalRef,
   useTableRef,
   withModal,
   withTable,
-} from "antd-form-with";
+} from 'antd-form-with';
 
 function App() {
   const modalRef = useModalRef();
@@ -17,21 +17,21 @@ function App() {
   const UserFormWithModal = withModal({
     async submit({ mode, data, record }) {
       if (mode === FormMode.Add) {
-        const res = await fetch("/api/users", {
-          method: "POST",
+        const res = await fetch('/api/users', {
+          method: 'POST',
           body: JSON.stringify(data),
         }).then((res) => res.json());
-        if (res.code === "success") {
-          return "success";
+        if (res.code === 'success') {
+          return 'success';
         }
       }
       if (mode === FormMode.Edit) {
         const res = await fetch(`/api/users/${record.id}`, {
-          method: "PUT",
+          method: 'PUT',
           body: JSON.stringify({ ...data, id: record.id }),
         }).then((res) => res.json());
-        if (res.code === "success") {
-          return "success";
+        if (res.code === 'success') {
+          return 'success';
         } else {
           message.error(res.message);
         }
@@ -42,7 +42,7 @@ function App() {
   const UserFormWithTable = withTable({
     service: async ({ current, pageSize, extra, filters, sorter }) => {
       const data = await fetch(
-        `/api/users?current=${current}&pageSize=${pageSize}`
+        `/api/users?current=${current}&pageSize=${pageSize}`,
       ).then((res) => res.json());
       return data;
     },
@@ -64,7 +64,7 @@ function App() {
               type="primary"
               onClick={() => {
                 modalRef.current?.open({
-                  title: "Create Modal",
+                  title: 'Create Modal',
                   mode: FormMode.Add,
                 });
               }}
@@ -74,33 +74,33 @@ function App() {
           );
         }}
         ref={tableRef}
-        rowKey={"id"}
+        rowKey={'id'}
         columns={[
           {
-            title: "Id",
-            dataIndex: "id",
-            key: "id",
+            title: 'Id',
+            dataIndex: 'id',
+            key: 'id',
           },
           {
-            title: "Name",
-            dataIndex: "name",
-            key: "name",
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
             render: (text) => text,
           },
           {
-            title: "Sex",
-            dataIndex: "sex",
-            key: "sex",
+            title: 'Sex',
+            dataIndex: 'sex',
+            key: 'sex',
           },
           {
-            title: "Action",
-            key: "action",
+            title: 'Action',
+            key: 'action',
             render: (_, record) => (
               <Space>
                 <button
                   onClick={() => {
                     modalRef.current?.open({
-                      title: "edit",
+                      title: 'edit',
                       mode: FormMode.Edit,
                       initialValue: record,
                       record,
@@ -112,7 +112,7 @@ function App() {
                 <button
                   onClick={() => {
                     modalRef.current?.open({
-                      title: "view",
+                      title: 'view',
                       mode: FormMode.View,
                       initialValue: record,
                     });
@@ -123,9 +123,9 @@ function App() {
                 <button
                   onClick={async () => {
                     const res = await fetch(`/api/users/${record.id}`, {
-                      method: "DELETE",
+                      method: 'DELETE',
                     }).then((res) => res.json());
-                    if (res.code === "success") {
+                    if (res.code === 'success') {
                       message.success(res.message);
                       tableRef.current?.refresh();
                     } else {

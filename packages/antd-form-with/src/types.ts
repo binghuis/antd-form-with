@@ -3,8 +3,8 @@ export interface PlainObject {
 }
 
 export enum FormMode {
-  View = "view",
-  Copy = "copy",
-  Add = "add",
-  Edit = "edit",
+  View = 'view',
+  Copy = 'copy',
+  Add = 'add',
+  Edit = 'edit',
 }

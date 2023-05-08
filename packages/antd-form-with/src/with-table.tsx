@@ -1,18 +1,18 @@
-import TableSearcher from "./components/table-searcher";
-import useBoolean from "./hooks/use-boolean";
-import { PlainObject } from "./types";
-import { filterNonEmpty, getDisplayName } from "./util";
-import { Form, FormInstance, Table, TableProps } from "antd";
-import { FilterValue, SorterResult } from "antd/es/table/interface";
-import { pick } from "lodash-es";
+import TableSearcher from './components/table-searcher';
+import useBoolean from './hooks/use-boolean';
+import { PlainObject } from './types';
+import { filterNonEmpty, getDisplayName } from './util';
+import { Form, FormInstance, Table, TableProps } from 'antd';
+import { FilterValue, SorterResult } from 'antd/es/table/interface';
+import { pick } from 'lodash-es';
 import {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
-} from "react";
-import React from "react";
+} from 'react';
+import React from 'react';
 
 export const useTableRef = () => {
   return useRef<withTableRef>(null);
@@ -47,7 +47,7 @@ interface withTableRef {
 
 type TablePlusProps<RecordType> = Omit<
   TableProps<RecordType>,
-  "dataSource" | "pagination" | "onChange" | "loading"
+  'dataSource' | 'pagination' | 'onChange' | 'loading'
 >;
 
 export const withTable = <RecordType extends PlainObject>(params: {
@@ -68,9 +68,9 @@ export const withTable = <RecordType extends PlainObject>(params: {
   const [formVal, setFormVal] = useState<PlainObject>({});
   const [pagination, setPagination] = useState<Pagination>(DefaultPagination);
   const [filterVal, setFilterVal] =
-    useState<ServiceParams<RecordType>["filters"]>();
+    useState<ServiceParams<RecordType>['filters']>();
   const [sorterVal, setSorterVal] =
-    useState<ServiceParams<RecordType>["sorter"]>();
+    useState<ServiceParams<RecordType>['sorter']>();
 
   const fetchData: FetchData<RecordType> = (params) => {
     const {
@@ -109,11 +109,11 @@ export const withTable = <RecordType extends PlainObject>(params: {
   return (
     FormComponent?: React.ComponentType<{
       form: FormInstance;
-    }>
+    }>,
   ) => {
     const TablePlus = forwardRef<withTableRef, TablePlusProps<RecordType>>(
       (props, ref) => {
-        const { rowKey = "id", title, ...nestProps } = props;
+        const { rowKey = 'id', title, ...nestProps } = props;
 
         const reset = () => {
           resetLoading.setTrue();
@@ -162,28 +162,28 @@ export const withTable = <RecordType extends PlainObject>(params: {
               dataSource={data}
               pagination={{ ...pagination, showQuickJumper: true }}
               onChange={(pagination, filters, sorter, { action }) => {
-                if (action === "filter") {
+                if (action === 'filter') {
                   setFilterVal(filters);
                 }
-                if (action === "sort") {
+                if (action === 'sort') {
                   setSorterVal(sorter);
                 }
                 setPagination(
                   pick(pagination, [
-                    "current",
-                    "pageSize",
-                    "total",
-                  ]) as Pagination
+                    'current',
+                    'pageSize',
+                    'total',
+                  ]) as Pagination,
                 );
               }}
             />
           </div>
         );
-      }
+      },
     );
 
     TablePlus.displayName = `withTable(${
-      FormComponent ? getDisplayName(FormComponent) : "null"
+      FormComponent ? getDisplayName(FormComponent) : 'null'
     })`;
 
     return React.memo(TablePlus);

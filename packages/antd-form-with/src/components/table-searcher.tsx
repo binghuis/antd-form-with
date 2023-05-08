@@ -1,7 +1,7 @@
-import useBoolean from "../hooks/use-boolean";
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Space, Tooltip } from "antd";
-import React from "react";
+import useBoolean from '../hooks/use-boolean';
+import { ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Row, Space, Tooltip } from 'antd';
+import React from 'react';
 
 interface TablePlusSearcher {
   search: () => void;
@@ -14,7 +14,7 @@ interface TablePlusSearcher {
 const TableSearcher: React.FC<TablePlusSearcher> = (props) => {
   const { search, reset, FormComponent, resetLoading, searchLoading } = props;
   return (
-    <Row justify={"space-between"} gutter={8} wrap={false}>
+    <Row justify={'space-between'} gutter={8} wrap={false}>
       <Col flex={1}>{FormComponent}</Col>
       <Col flex={0}>
         <Space align="start">

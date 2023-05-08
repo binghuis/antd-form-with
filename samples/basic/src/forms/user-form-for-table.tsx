@@ -1,4 +1,4 @@
-import { Col, Form, FormInstance, Input, Row } from "antd";
+import { Col, Form, FormInstance, Input, Row } from 'antd';
 
 const UserForm = (props: { form: FormInstance }) => {
   const { form } = props;
