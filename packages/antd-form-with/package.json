@@ -31,17 +31,17 @@
     "release": "release-it"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.0.1",
-    "antd": "^5.4.2",
+    "@ant-design/icons": "^5.1.4",
+    "antd": "^5.5.2",
     "lodash-es": "^4.17.21",
     "react": "^18.2.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.7",
-    "@types/react": "^18.0.35",
+    "@types/react": "^18.2.7",
     "auto-changelog": "^2.4.0",
-    "release-it": "^15.10.1",
-    "terser": "^5.17.1",
+    "release-it": "^15.10.3",
+    "terser": "^5.17.6",
     "tsup": "^6.7.0"
   }
 }
