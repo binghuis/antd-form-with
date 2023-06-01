@@ -49,7 +49,7 @@ function App() {
   })(UserFormForTable);
 
   return (
-    <div className="App">
+    <div className='App'>
       <UserFormWithModal
         ref={modalRef}
         onSuccess={() => {
@@ -61,7 +61,7 @@ function App() {
         title={() => {
           return (
             <Button
-              type="primary"
+              type='primary'
               onClick={() => {
                 modalRef.current?.open({
                   title: 'Create Modal',
@@ -98,6 +98,7 @@ function App() {
             render: (_, record) => (
               <Space>
                 <button
+                  type='button'
                   onClick={() => {
                     modalRef.current?.open({
                       title: 'edit',
@@ -110,6 +111,7 @@ function App() {
                   edit
                 </button>
                 <button
+                  type='button'
                   onClick={() => {
                     modalRef.current?.open({
                       title: 'view',
@@ -121,6 +123,7 @@ function App() {
                   view
                 </button>
                 <button
+                  type='button'
                   onClick={async () => {
                     const res = await fetch(`/api/users/${record.id}`, {
                       method: 'DELETE',
