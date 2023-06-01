@@ -5,6 +5,7 @@ import { Form, FormInstance, Modal, ModalProps } from 'antd';
 import { identity, isEmpty } from 'lodash-es';
 import React, {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -33,8 +34,8 @@ export const useModalRef = <InitialValue extends PlainObject>() => {
 export const withModal = <FormVal extends PlainObject>(params?: {
   submit?: (params: {
     mode: FormMode;
-    data: FormVal;
-    record: PlainObject;
+    data?: FormVal;
+    record?: PlainObject;
   }) => Promise<void | 'success'>;
 }) => {
   const { submit } = params ?? {};
@@ -43,7 +44,7 @@ export const withModal = <FormVal extends PlainObject>(params?: {
     FormComponent: React.ComponentType<{
       form: FormInstance;
       mode: FormMode;
-      data: Partial<FormVal>;
+      data?: Partial<FormVal>;
     }>,
   ) => {
     const ModalPlus = forwardRef<withModalRef<FormVal>, ModalPlusProps>(
@@ -60,8 +61,8 @@ export const withModal = <FormVal extends PlainObject>(params?: {
         } = props ?? {};
         const [title, setTitle] = useState<Title>();
         const [mode, setMode] = useState<FormMode>(FormMode.Add);
-        const [value, setValue] = useState<Partial<FormVal>>({});
-        const [record, setRecord] = useState<PlainObject>({});
+        const [value, setValue] = useState<Partial<FormVal>>();
+        const [record, setRecord] = useState<PlainObject>();
         const confirmLoading = useBoolean();
         const visible = useBoolean(open);
         const [form] = Form.useForm();
@@ -70,13 +71,16 @@ export const withModal = <FormVal extends PlainObject>(params?: {
           return mode === 'view';
         }, [mode]);
 
+        useEffect(() => {
+          if (!isEmpty(value)) {
+            form.setFieldsValue(value);
+          }
+        }, [value]);
+
         useImperativeHandle(ref, () => ({
           open: (openProps) => {
             const { title, initialValue, mode, record = {} } = openProps;
-            if (!isEmpty(initialValue)) {
-              setValue(initialValue);
-              form.setFieldsValue(initialValue);
-            }
+            setValue(initialValue);
             setRecord(record);
             if (mode) {
               setMode(mode);
@@ -109,7 +113,11 @@ export const withModal = <FormVal extends PlainObject>(params?: {
                 confirmLoading.setFalse();
                 return;
               }
-              submit?.({ mode, data: form.getFieldsValue(), record })
+              submit?.({
+                mode,
+                data: form.getFieldsValue(),
+                record,
+              })
                 .then((status) => {
                   if (status === 'success') {
                     visible.setFalse();
