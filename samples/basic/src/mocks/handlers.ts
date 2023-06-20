@@ -5,7 +5,7 @@ import { rest } from 'msw';
 export function createRandomUser(): User {
   return {
     id: faker.number.int(),
-    name: faker.internet.userName(),
+    name: '',
     sex: faker.person.sex(),
   };
 }

@@ -87,7 +87,6 @@ function App() {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
-            render: (text) => text,
           },
           {
             title: 'Sex',

@@ -116,7 +116,7 @@ export const withTable = <
   ) => {
     const TablePlus = forwardRef<withTableRef, TablePlusProps<RecordType>>(
       (props, ref) => {
-        const { rowKey = 'id', ...nestProps } = props;
+        const { rowKey = 'id', columns, ...nestProps } = props;
 
         const reset = () => {
           resetLoading.setTrue();
@@ -149,6 +149,14 @@ export const withTable = <
             <Table<RecordType>
               {...nestProps}
               rowKey={rowKey}
+              columns={columns?.map((column) => {
+                if (!column.render) {
+                  column.render = (value) => {
+                    return value ? value : '-';
+                  };
+                }
+                return column;
+              })}
               loading={loading.state}
               dataSource={data}
               pagination={{ ...paginationVal, showQuickJumper: true }}
