@@ -60,8 +60,8 @@ function App() {
       />
 
       <UserFormWithTable
-        title={() => {
-          return (
+        caption={
+          <Space>
             <Button
               type='primary'
               onClick={() => {
@@ -73,8 +73,8 @@ function App() {
             >
               New
             </Button>
-          );
-        }}
+          </Space>
+        }
         ref={tableRef}
         rowKey={'id'}
         columns={[
