@@ -3,7 +3,6 @@ import useBoolean from './hooks/use-boolean';
 import { filterNonEmpty, getDisplayName } from './util';
 import { Form, FormInstance, Table, TableProps } from 'antd';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
-import { isEmpty, pick } from 'lodash-es';
 import {
   forwardRef,
   useEffect,
@@ -13,40 +12,40 @@ import {
 } from 'react';
 import React from 'react';
 
+interface withTableRef {
+  refresh: () => void;
+}
+
 export const useTableRef = () => {
   return useRef<withTableRef>(null);
 };
+
+interface Pagination {
+  current?: number;
+  pageSize?: number;
+  total?: number;
+}
 
 interface ServiceResponse<Item> {
   total: number;
   list: Item[];
 }
 
-interface Pagination {
-  current: number;
-  pageSize: number;
-  total?: number;
-}
-
-interface ServiceParams<RecordType, SearcherType> extends Pagination {
-  extra: Partial<SearcherType>;
+interface ServiceParams<RecordType, FormType> extends Pagination {
+  searcher?: Partial<FormType>;
   filters?: Record<string, FilterValue | null>;
   sorter?: SorterResult<RecordType> | SorterResult<RecordType>[];
 }
 
-interface Service<RecordType, SearcherType> {
-  (params: ServiceParams<RecordType, SearcherType>): Promise<
+interface Service<RecordType, FormType> {
+  (params: ServiceParams<RecordType, FormType>): Promise<
     ServiceResponse<RecordType>
   >;
 }
 
-type FetchData<RecordType, SearcherType> = (
-  params?: ServiceParams<RecordType, SearcherType>,
+type FetchData<RecordType, FormType> = (
+  params?: ServiceParams<RecordType, FormType>,
 ) => void;
-
-interface withTableRef {
-  refresh: () => void;
-}
 
 type TablePlusProps<RecordType> = Omit<
   TableProps<RecordType>,
@@ -55,13 +54,12 @@ type TablePlusProps<RecordType> = Omit<
 
 export const withTable = <
   RecordType extends object,
-  SearcherType extends object,
+  FormType extends object,
 >(params: {
   pageSize?: number;
-  initFormVal?: Partial<SearcherType>;
-  service: Service<RecordType, SearcherType>;
+  service: Service<RecordType, FormType>;
 }) => {
-  const { pageSize = 10, service, initFormVal = {} } = params;
+  const { pageSize = 10, service } = params;
   const DefaultPagination: Pagination = {
     current: 1,
     pageSize,
@@ -72,31 +70,39 @@ export const withTable = <
   const searchLoading = useBoolean();
   const [form] = Form.useForm();
   const [data, setData] = useState<RecordType[]>();
-  const [formVal, setFormVal] = useState(initFormVal);
-  const [pagination, setPagination] = useState<Pagination>(DefaultPagination);
+  const [paginationVal, setPaginationVal] =
+    useState<Pagination>(DefaultPagination);
   const [filterVal, setFilterVal] =
-    useState<ServiceParams<RecordType, SearcherType>['filters']>();
+    useState<ServiceParams<RecordType, FormType>['filters']>();
   const [sorterVal, setSorterVal] =
-    useState<ServiceParams<RecordType, SearcherType>['sorter']>();
+    useState<ServiceParams<RecordType, FormType>['sorter']>();
 
-  const fetchData: FetchData<RecordType, SearcherType> = (params) => {
+  const fetchData: FetchData<RecordType, FormType> = (params) => {
     const {
-      current = DefaultPagination.current,
-      pageSize = DefaultPagination.pageSize,
-      filters,
-      sorter,
-      extra = {},
+      current = paginationVal.current,
+      pageSize = paginationVal.pageSize,
+      filters = filterVal,
+      sorter = sorterVal,
     } = params ?? {};
+
+    loading.setTrue();
 
     service({
       current,
       pageSize,
       filters,
       sorter,
-      extra,
+      searcher: filterNonEmpty(form.getFieldsValue()),
     }).then(({ total, list }) => {
       setData(list);
-      setPagination((pagination) => ({ ...pagination, total }));
+      setPaginationVal((pagination) => ({
+        ...pagination,
+        current,
+        pageSize,
+        total,
+      }));
+      setFilterVal(filters);
+      setSorterVal(sorter);
       loading.setFalse();
       searchLoading.setFalse();
       resetLoading.setFalse();
@@ -104,20 +110,8 @@ export const withTable = <
   };
 
   useEffect(() => {
-    if (!isEmpty(initFormVal)) {
-      form.setFieldsValue(initFormVal);
-    }
+    fetchData();
   }, []);
-
-  useEffect(() => {
-    loading.setTrue();
-    fetchData({
-      ...pagination,
-      filters: filterVal,
-      sorter: sorterVal,
-      extra: formVal,
-    });
-  }, [formVal, pagination.current, pagination.pageSize, sorterVal, filterVal]);
 
   return (
     FormComponent?: React.ComponentType<{
@@ -130,27 +124,18 @@ export const withTable = <
 
         const reset = () => {
           resetLoading.setTrue();
-          setPagination((pagination) => ({ ...pagination, current: 1 }));
           form.resetFields();
-          setFormVal({});
+          fetchData({ current: 1 });
         };
 
         const search = () => {
           searchLoading.setTrue();
-          setPagination((pagination) => ({ ...pagination, current: 1 }));
-          setFormVal(filterNonEmpty(form.getFieldsValue()));
+          fetchData({ current: 1 });
         };
 
         useImperativeHandle(ref, () => ({
           refresh() {
-            loading.setTrue();
-            fetchData({
-              ...pagination,
-              current: 1,
-              filters: filterVal,
-              sorter: sorterVal,
-              extra: formVal,
-            });
+            fetchData({ current: 1 });
           },
         }));
 
@@ -173,21 +158,18 @@ export const withTable = <
               }}
               loading={loading.state}
               dataSource={data}
-              pagination={{ ...pagination, showQuickJumper: true }}
+              pagination={{ ...paginationVal, showQuickJumper: true }}
               onChange={(pagination, filters, sorter, { action }) => {
                 if (action === 'filter') {
-                  setFilterVal(filters);
+                  fetchData({ filters });
                 }
                 if (action === 'sort') {
-                  setSorterVal(sorter);
+                  fetchData({ sorter });
                 }
-                setPagination(
-                  pick(pagination, [
-                    'current',
-                    'pageSize',
-                    'total',
-                  ]) as Pagination,
-                );
+                fetchData({
+                  current: pagination.current,
+                  pageSize: pagination.pageSize,
+                });
               }}
             />
           </div>

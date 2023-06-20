@@ -13,7 +13,6 @@ import {
 
 function App() {
   const modalRef = useModalRef();
-  const tableRef = useTableRef();
 
   const UserFormWithModal = withModal<User, User>({
     async submit({ mode, data, record }) {
@@ -40,8 +39,10 @@ function App() {
     },
   })(UserFormForModal);
 
+  const tableRef = useTableRef();
+
   const UserFormWithTable = withTable<User, User>({
-    service: async ({ current, pageSize, extra, filters, sorter }) => {
+    service: async ({ current, pageSize, searcher, filters, sorter }) => {
       const data = await fetch(
         `/api/users?current=${current}&pageSize=${pageSize}`,
       ).then((res) => res.json());
