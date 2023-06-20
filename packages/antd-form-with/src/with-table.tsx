@@ -31,33 +31,29 @@ interface ServiceResponse<Item> {
   list: Item[];
 }
 
-interface ServiceParams<RecordType, FormType> extends Pagination {
-  searcher?: Partial<FormType>;
+interface ServiceParams<F, R> extends Pagination {
+  searcher?: Partial<F>;
   filters?: Record<string, FilterValue | null>;
-  sorter?: SorterResult<RecordType> | SorterResult<RecordType>[];
+  sorter?: SorterResult<R> | SorterResult<R>[];
 }
 
-interface Service<RecordType, FormType> {
-  (params: ServiceParams<RecordType, FormType>): Promise<
-    ServiceResponse<RecordType>
-  >;
+interface Service<F, R> {
+  (params: ServiceParams<F, R>): Promise<ServiceResponse<R>>;
 }
 
-type FetchData<RecordType, FormType> = (
-  params?: ServiceParams<RecordType, FormType>,
-) => void;
+type FetchData<F, R> = (params?: ServiceParams<F, R>) => void;
 
-type TablePlusProps<RecordType> = Omit<
-  TableProps<RecordType>,
+type TablePlusProps<R> = Omit<
+  TableProps<R>,
   'dataSource' | 'pagination' | 'onChange' | 'loading'
 >;
 
 export const withTable = <
+  FormType extends object | null,
   RecordType extends object,
-  FormType extends object,
 >(params: {
   pageSize?: number;
-  service: Service<RecordType, FormType>;
+  service: Service<FormType, RecordType>;
 }) => {
   const { pageSize = 10, service } = params;
   const DefaultPagination: Pagination = {
@@ -73,11 +69,11 @@ export const withTable = <
   const [paginationVal, setPaginationVal] =
     useState<Pagination>(DefaultPagination);
   const [filterVal, setFilterVal] =
-    useState<ServiceParams<RecordType, FormType>['filters']>();
+    useState<ServiceParams<FormType, RecordType>['filters']>();
   const [sorterVal, setSorterVal] =
-    useState<ServiceParams<RecordType, FormType>['sorter']>();
+    useState<ServiceParams<FormType, RecordType>['sorter']>();
 
-  const fetchData: FetchData<RecordType, FormType> = (params) => {
+  const fetchData: FetchData<FormType, RecordType> = (params) => {
     const {
       current = paginationVal.current,
       pageSize = paginationVal.pageSize,

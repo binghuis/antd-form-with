@@ -13,20 +13,17 @@ import React, {
 } from 'react';
 
 /** 组件 ref 类型 */
-interface withModalRef<FormType, RecordType> {
+interface withModalRef<F, R> {
   open: (openProps: {
     title: Title;
-    initialValue?: Partial<FormType>;
+    initialValue?: Partial<F>;
     mode?: FormMode;
-    record?: RecordType;
+    record?: R;
   }) => void;
 }
 
-export const useModalRef = <
-  FormType extends object,
-  RecordType extends object,
->() => {
-  return useRef<withModalRef<FormType, RecordType>>(null);
+export const useModalRef = <F extends object, R extends object>() => {
+  return useRef<withModalRef<F, R>>(null);
 };
 
 type Title = ModalProps['title'];
