@@ -1,10 +1,9 @@
 import TableSearcher from './components/table-searcher';
 import useBoolean from './hooks/use-boolean';
-import { PlainObject } from './types';
 import { filterNonEmpty, getDisplayName } from './util';
 import { Form, FormInstance, Table, TableProps } from 'antd';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
-import { pick } from 'lodash-es';
+import { isEmpty, pick } from 'lodash-es';
 import {
   forwardRef,
   useEffect,
@@ -29,17 +28,21 @@ interface Pagination {
   total?: number;
 }
 
-interface ServiceParams<RecordType> extends Pagination {
-  extra: PlainObject;
+interface ServiceParams<RecordType, SearcherType> extends Pagination {
+  extra: Partial<SearcherType>;
   filters?: Record<string, FilterValue | null>;
   sorter?: SorterResult<RecordType> | SorterResult<RecordType>[];
 }
 
-interface Service<RecordType> {
-  (params: ServiceParams<RecordType>): Promise<ServiceResponse<RecordType>>;
+interface Service<RecordType, SearcherType> {
+  (params: ServiceParams<RecordType, SearcherType>): Promise<
+    ServiceResponse<RecordType>
+  >;
 }
 
-type FetchData<RecordType> = (params?: ServiceParams<RecordType>) => void;
+type FetchData<RecordType, SearcherType> = (
+  params?: ServiceParams<RecordType, SearcherType>,
+) => void;
 
 interface withTableRef {
   refresh: () => void;
@@ -50,11 +53,15 @@ type TablePlusProps<RecordType> = Omit<
   'dataSource' | 'pagination' | 'onChange' | 'loading'
 >;
 
-export const withTable = <RecordType extends PlainObject>(params: {
+export const withTable = <
+  RecordType extends object,
+  SearcherType extends object,
+>(params: {
   pageSize?: number;
-  service: Service<RecordType>;
+  initFormVal?: Partial<SearcherType>;
+  service: Service<RecordType, SearcherType>;
 }) => {
-  const { pageSize = 10, service } = params;
+  const { pageSize = 10, service, initFormVal = {} } = params;
   const DefaultPagination: Pagination = {
     current: 1,
     pageSize,
@@ -65,14 +72,14 @@ export const withTable = <RecordType extends PlainObject>(params: {
   const searchLoading = useBoolean();
   const [form] = Form.useForm();
   const [data, setData] = useState<RecordType[]>();
-  const [formVal, setFormVal] = useState<PlainObject>({});
+  const [formVal, setFormVal] = useState(initFormVal);
   const [pagination, setPagination] = useState<Pagination>(DefaultPagination);
   const [filterVal, setFilterVal] =
-    useState<ServiceParams<RecordType>['filters']>();
+    useState<ServiceParams<RecordType, SearcherType>['filters']>();
   const [sorterVal, setSorterVal] =
-    useState<ServiceParams<RecordType>['sorter']>();
+    useState<ServiceParams<RecordType, SearcherType>['sorter']>();
 
-  const fetchData: FetchData<RecordType> = (params) => {
+  const fetchData: FetchData<RecordType, SearcherType> = (params) => {
     const {
       current = DefaultPagination.current,
       pageSize = DefaultPagination.pageSize,
@@ -95,6 +102,12 @@ export const withTable = <RecordType extends PlainObject>(params: {
       resetLoading.setFalse();
     });
   };
+
+  useEffect(() => {
+    if (!isEmpty(initFormVal)) {
+      form.setFieldsValue(initFormVal);
+    }
+  }, []);
 
   useEffect(() => {
     loading.setTrue();

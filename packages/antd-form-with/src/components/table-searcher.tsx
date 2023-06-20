@@ -17,19 +17,19 @@ const TableSearcher: React.FC<TablePlusSearcher> = (props) => {
     <Row justify={'space-between'} gutter={8} wrap={false}>
       <Col flex={1}>{FormComponent}</Col>
       <Col flex={0}>
-        <Space align="start">
-          <Tooltip title="查询">
+        <Space align='start'>
+          <Tooltip title='查询'>
             <Button
               loading={searchLoading}
-              type="primary"
+              type='primary'
               icon={<SearchOutlined />}
               onClick={() => {
                 search();
               }}
             />
           </Tooltip>
-          <Space direction="vertical">
-            <Tooltip title="重置">
+          <Space direction='vertical'>
+            <Tooltip title='重置'>
               <Button
                 loading={resetLoading}
                 icon={<ReloadOutlined />}
@@ -40,7 +40,7 @@ const TableSearcher: React.FC<TablePlusSearcher> = (props) => {
             </Tooltip>
             {/* <Tooltip title={fold.state ? '收起' : '展开'}>
               <Button
-                type="dashed"
+                type='dashed'
                 icon={fold.state ? <UpOutlined /> : <DownOutlined />}
                 onClick={() => {
                   fold.toggle();

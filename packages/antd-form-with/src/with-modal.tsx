@@ -1,5 +1,5 @@
 import useBoolean from './hooks/use-boolean';
-import { FormMode, PlainObject } from './types';
+import { FormMode } from './types';
 import { getDisplayName } from './util';
 import { Form, FormInstance, Modal, ModalProps } from 'antd';
 import { identity, isEmpty } from 'lodash-es';
@@ -19,7 +19,7 @@ interface withModalRef<InitialValue> {
     title: Title;
     initialValue?: Partial<InitialValue>;
     mode?: FormMode;
-    record?: PlainObject;
+    record?: object;
   }) => void;
 }
 interface ModalPlusProps extends Partial<Omit<ModalProps, 'title' | 'onOk'>> {
@@ -27,15 +27,18 @@ interface ModalPlusProps extends Partial<Omit<ModalProps, 'title' | 'onOk'>> {
   onSuccess?: ModalProps['onOk'];
 }
 
-export const useModalRef = <InitialValue extends PlainObject>() => {
+export const useModalRef = <InitialValue extends object>() => {
   return useRef<withModalRef<InitialValue>>(null);
 };
 
-export const withModal = <FormVal extends PlainObject>(params?: {
+export const withModal = <
+  FormType extends object,
+  RecordType extends object,
+>(params?: {
   submit?: (params: {
     mode: FormMode;
-    data?: FormVal;
-    record?: PlainObject;
+    data?: FormType;
+    record?: Partial<RecordType>;
   }) => Promise<void | 'success'>;
 }) => {
   const { submit } = params ?? {};
@@ -44,10 +47,10 @@ export const withModal = <FormVal extends PlainObject>(params?: {
     FormComponent: React.ComponentType<{
       form: FormInstance;
       mode: FormMode;
-      data?: Partial<FormVal>;
+      data?: Partial<FormType>;
     }>,
   ) => {
-    const ModalPlus = forwardRef<withModalRef<FormVal>, ModalPlusProps>(
+    const ModalPlus = forwardRef<withModalRef<FormType>, ModalPlusProps>(
       (props, ref) => {
         const {
           cancelText,
@@ -61,8 +64,8 @@ export const withModal = <FormVal extends PlainObject>(params?: {
         } = props ?? {};
         const [title, setTitle] = useState<Title>();
         const [mode, setMode] = useState<FormMode>(FormMode.Add);
-        const [value, setValue] = useState<Partial<FormVal>>();
-        const [record, setRecord] = useState<PlainObject>();
+        const [value, setValue] = useState<Partial<FormType>>();
+        const [record, setRecord] = useState<Partial<RecordType>>();
         const confirmLoading = useBoolean();
         const visible = useBoolean(open);
         const [form] = Form.useForm();

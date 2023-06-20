@@ -1,6 +1,7 @@
 import './App.css';
 import UserFormForModal from './forms/user-form-for-modal';
 import UserFormForTable from './forms/user-form-for-table';
+import { User } from './types/user';
 import { Button, Space, message } from 'antd';
 import {
   FormMode,
@@ -14,7 +15,7 @@ function App() {
   const modalRef = useModalRef();
   const tableRef = useTableRef();
 
-  const UserFormWithModal = withModal({
+  const UserFormWithModal = withModal<User, User>({
     async submit({ mode, data, record }) {
       if (mode === FormMode.Add) {
         const res = await fetch('/api/users', {
@@ -26,9 +27,9 @@ function App() {
         }
       }
       if (mode === FormMode.Edit) {
-        const res = await fetch(`/api/users/${record.id}`, {
+        const res = await fetch(`/api/users/${record?.id}`, {
           method: 'PUT',
-          body: JSON.stringify({ ...data, id: record.id }),
+          body: JSON.stringify({ ...data, id: record?.id }),
         }).then((res) => res.json());
         if (res.code === 'success') {
           return 'success';
@@ -39,7 +40,7 @@ function App() {
     },
   })(UserFormForModal);
 
-  const UserFormWithTable = withTable({
+  const UserFormWithTable = withTable<User, User>({
     service: async ({ current, pageSize, extra, filters, sorter }) => {
       const data = await fetch(
         `/api/users?current=${current}&pageSize=${pageSize}`,
