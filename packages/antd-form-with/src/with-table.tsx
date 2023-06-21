@@ -43,9 +43,12 @@ interface Service<F, R> {
 
 type FetchData<F, R> = (params?: ServiceParams<F, R>) => void;
 
-type TablePlusProps<R> = Omit<
+type TablePlusProps<R> = {
+  title?: React.ReactNode;
+  extra?: React.ReactNode;
+} & Omit<
   TableProps<R>,
-  'dataSource' | 'pagination' | 'onChange' | 'loading'
+  'dataSource' | 'pagination' | 'onChange' | 'loading' | 'title' | 'caption'
 >;
 
 export const withTable = <
@@ -116,7 +119,7 @@ export const withTable = <
   ) => {
     const TablePlus = forwardRef<withTableRef, TablePlusProps<RecordType>>(
       (props, ref) => {
-        const { rowKey = 'id', columns, ...nestProps } = props;
+        const { rowKey = 'id', title, extra, columns, ...nestProps } = props;
 
         const reset = () => {
           resetLoading.setTrue();
@@ -157,7 +160,14 @@ export const withTable = <
                 }
                 return column;
               })}
-              caption={<div className='bg-red-400'>s</div>}
+              caption={
+                title || extra ? (
+                  <div className='flex justify-between mb-2'>
+                    {title && <div className='text-lg'>{title}</div>}
+                    {extra && <div>{extra}</div>}
+                  </div>
+                ) : null
+              }
               loading={loading.state}
               dataSource={data}
               pagination={{ ...paginationVal, showQuickJumper: true }}

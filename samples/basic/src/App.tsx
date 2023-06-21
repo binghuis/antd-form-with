@@ -60,20 +60,19 @@ function App() {
       />
 
       <UserFormWithTable
-        caption={
-          <Space>
-            <Button
-              type='primary'
-              onClick={() => {
-                modalRef.current?.open({
-                  title: 'Create Modal',
-                  mode: FormMode.Add,
-                });
-              }}
-            >
-              New
-            </Button>
-          </Space>
+        title={'Title'}
+        extra={
+          <Button
+            type='primary'
+            onClick={() => {
+              modalRef.current?.open({
+                title: 'Create Modal',
+                mode: FormMode.Add,
+              });
+            }}
+          >
+            New
+          </Button>
         }
         ref={tableRef}
         rowKey={'id'}

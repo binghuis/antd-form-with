@@ -9,5 +9,5 @@ export default defineConfig({
   format: ['esm'],
   treeshake: true,
   splitting: true,
-  minify: true,
+  // minify: true,
 });
