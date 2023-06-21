@@ -32,7 +32,7 @@ interface ServiceResponse<Item> {
 }
 
 interface ServiceParams<F, R> extends Pagination {
-  searcher?: Partial<F>;
+  query?: Partial<F>;
   filters?: Record<string, FilterValue | null>;
   sorter?: SorterResult<R> | SorterResult<R>[];
 }
@@ -88,7 +88,7 @@ export const withTable = <
       pageSize,
       filters,
       sorter,
-      searcher: filterNonEmpty(form.getFieldsValue()),
+      query: filterNonEmpty(form.getFieldsValue()),
     }).then(({ total, list }) => {
       setData(list);
       setPaginationVal((pagination) => ({
@@ -157,6 +157,7 @@ export const withTable = <
                 }
                 return column;
               })}
+              caption={<div className='bg-red-400'>s</div>}
               loading={loading.state}
               dataSource={data}
               pagination={{ ...paginationVal, showQuickJumper: true }}

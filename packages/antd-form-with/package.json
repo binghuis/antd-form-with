@@ -40,8 +40,10 @@
     "@types/lodash-es": "^4.17.7",
     "@types/react": "^18.2.13",
     "auto-changelog": "^2.4.0",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
     "release-it": "^15.11.0",
-    "terser": "^5.18.1",
+    "tailwindcss": "^3.3.2",
     "tsup": "^7.0.0"
   }
 }

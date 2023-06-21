@@ -42,7 +42,7 @@ function App() {
   const tableRef = useTableRef();
 
   const UserFormWithTable = withTable<User, User>({
-    service: async ({ current, pageSize, searcher, filters, sorter }) => {
+    service: async ({ current, pageSize, query, filters, sorter }) => {
       const data = await fetch(
         `/api/users?current=${current}&pageSize=${pageSize}`,
       ).then((res) => res.json());
