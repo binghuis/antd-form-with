@@ -1,4 +1,3 @@
-import TableSearcher from './components/table-searcher';
 import useBoolean from './hooks/use-boolean';
 import { filterNonEmpty, getDisplayName } from './util';
 import { Form, FormInstance, Table, TableProps } from 'antd';
@@ -50,6 +49,14 @@ type TablePlusProps<R> = {
   TableProps<R>,
   'dataSource' | 'pagination' | 'onChange' | 'loading' | 'title' | 'caption'
 >;
+
+interface TablePlusSearcherProps {
+  search: () => void;
+  reset: () => void;
+  form: FormInstance;
+  resetLoading: boolean;
+  searchLoading: boolean;
+}
 
 export const withTable = <
   FormType extends object | null,
@@ -112,11 +119,7 @@ export const withTable = <
     fetchData();
   }, []);
 
-  return (
-    FormComponent?: React.ComponentType<{
-      form: FormInstance;
-    }>,
-  ) => {
+  return (TablePlusSearcher?: React.ComponentType<TablePlusSearcherProps>) => {
     const TablePlus = forwardRef<withTableRef, TablePlusProps<RecordType>>(
       (props, ref) => {
         const { rowKey = 'id', title, extra, columns, ...nestProps } = props;
@@ -140,9 +143,9 @@ export const withTable = <
 
         return (
           <div>
-            {FormComponent && (
-              <TableSearcher
-                FormComponent={<FormComponent form={form} />}
+            {TablePlusSearcher && (
+              <TablePlusSearcher
+                form={form}
                 searchLoading={searchLoading.state}
                 resetLoading={resetLoading.state}
                 reset={reset}
@@ -190,7 +193,7 @@ export const withTable = <
     );
 
     TablePlus.displayName = `withTable(${
-      FormComponent ? getDisplayName(FormComponent) : 'null'
+      TablePlusSearcher ? getDisplayName(TablePlusSearcher) : 'null'
     })`;
 
     return React.memo(TablePlus);

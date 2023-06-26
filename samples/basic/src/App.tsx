@@ -1,6 +1,6 @@
 import './App.css';
-import UserFormForModal from './forms/user-form-for-modal';
-import UserFormForTable from './forms/user-form-for-table';
+import UserFormForModal from './forms/user-form-modal';
+import TableSearcher from './forms/user-form-table-searcher';
 import { User } from './types/user';
 import { Button, Space, message } from 'antd';
 import {
@@ -48,7 +48,7 @@ function App() {
       ).then((res) => res.json());
       return data;
     },
-  })(UserFormForTable);
+  })(TableSearcher);
 
   return (
     <div className='App'>
@@ -71,7 +71,7 @@ function App() {
               });
             }}
           >
-            New
+            + New
           </Button>
         }
         ref={tableRef}
