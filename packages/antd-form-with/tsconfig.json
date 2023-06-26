@@ -5,8 +5,10 @@
     "noEmit": true,
     "lib": [
       "ES2022",
-      "DOM"
+      "DOM",
+      "DOM.Iterable"
     ],
+    "target": "ES2020",
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "skipLibCheck": true,
