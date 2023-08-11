@@ -1,3 +1,6 @@
+import { FormInstance } from 'antd';
+import { FunctionComponent } from 'react';
+
 export interface PlainObject {
   [key: string]: unknown;
 }

@@ -1,4 +1,4 @@
-import { Col, Form, FormInstance, Input, Row, Select } from 'antd';
+import { Col, DatePicker, Form, FormInstance, Input, Row, Select } from 'antd';
 
 const UserForm = (props: { form: FormInstance }) => {
   const { form } = props;
@@ -16,21 +16,21 @@ const UserForm = (props: { form: FormInstance }) => {
     >
       <Row>
         <Col md={12} lg={8} xl={8} xxl={6}>
-          <Form.Item label='uuid' name='userId' style={{ marginBottom: 8 }}>
+          <Form.Item label="ID" name="userId" style={{ marginBottom: 8 }}>
             <Input />
           </Form.Item>
         </Col>
         <Col md={12} lg={8} xl={8} xxl={6}>
-          <Form.Item label='phone' name='phone' style={{ marginBottom: 8 }}>
+          <Form.Item label="姓名" name="name" style={{ marginBottom: 8 }}>
             <Input />
           </Form.Item>
         </Col>
         <Col md={12} lg={8} xl={8} xxl={6}>
-          <Form.Item label='sex' name='sex' style={{ marginBottom: 8 }}>
+          <Form.Item label="性别" name="sex" style={{ marginBottom: 8 }}>
             <Select
               options={[
-                { label: 'male', value: 'male' },
-                { label: 'female', value: 'female' },
+                { label: '男', value: 'male' },
+                { label: '女', value: 'female' },
               ]}
             />
           </Form.Item>

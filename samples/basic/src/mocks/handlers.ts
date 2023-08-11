@@ -1,11 +1,11 @@
-import { User } from '../types/user';
 import { faker } from '@faker-js/faker';
 import { rest } from 'msw';
+import { User } from '../types/user';
 
 export function createRandomUser(): User {
   return {
     id: faker.number.int(),
-    name: '',
+    name: faker.person.fullName(),
     sex: faker.person.sex(),
   };
 }

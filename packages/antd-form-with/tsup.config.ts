@@ -9,5 +9,11 @@ export default defineConfig({
   format: ['esm'],
   treeshake: true,
   splitting: true,
-  // minify: true,
+  target: 'es2020',
+  minify: true,
+  esbuildOptions(options) {
+    options.banner = {
+      js: '"use client"',
+    }
+  },
 });

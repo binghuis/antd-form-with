@@ -1,5 +1,3 @@
-import useBoolean from './hooks/use-boolean';
-import { filterNonEmpty, getDisplayName } from './util';
 import { Form, FormInstance, Table, TableProps } from 'antd';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import {
@@ -10,6 +8,9 @@ import {
   useState,
 } from 'react';
 import React from 'react';
+import useBoolean from './hooks/use-boolean';
+import { TablePlusSearcherProps } from './table-searcher-with';
+import { filterNonEmpty, getDisplayName } from './util';
 
 interface withTableRef {
   refresh: () => void;
@@ -49,14 +50,6 @@ type TablePlusProps<R> = {
   TableProps<R>,
   'dataSource' | 'pagination' | 'onChange' | 'loading' | 'title' | 'caption'
 >;
-
-interface TablePlusSearcherProps {
-  search: () => void;
-  reset: () => void;
-  form: FormInstance;
-  resetLoading: boolean;
-  searchLoading: boolean;
-}
 
 export const withTable = <
   FormType extends object | null,
@@ -165,8 +158,8 @@ export const withTable = <
               })}
               caption={
                 title || extra ? (
-                  <div className='flex justify-between mb-2'>
-                    {title && <div className='text-lg'>{title}</div>}
+                  <div className="flex justify-between mb-2">
+                    {title && <div className="text-lg">{title}</div>}
                     {extra && <div>{extra}</div>}
                   </div>
                 ) : null

@@ -1,15 +1,17 @@
-import './App.css';
-import UserFormForModal from './forms/user-form-modal';
-import TableSearcher from './forms/user-form-table-searcher';
-import { User } from './types/user';
 import { Button, Space, message } from 'antd';
 import {
   FormMode,
+  tableSearcherWith,
   useModalRef,
   useTableRef,
   withModal,
   withTable,
 } from 'antd-form-with';
+import qs from 'query-string';
+import './App.css';
+import UserFormForModal from './forms/user-form-modal';
+import UserForm from './forms/user-form-table';
+import { User } from './types/user';
 
 function App() {
   const modalRef = useModalRef();
@@ -43,15 +45,17 @@ function App() {
 
   const UserFormWithTable = withTable<User, User>({
     service: async ({ current, pageSize, query, filters, sorter }) => {
+      console.log(filters, sorter);
+
       const data = await fetch(
-        `/api/users?current=${current}&pageSize=${pageSize}`,
+        `/api/users?${qs.stringify({ ...query, current, pageSize } ?? {})}`,
       ).then((res) => res.json());
       return data;
     },
-  })(TableSearcher);
+  })(tableSearcherWith(UserForm));
 
   return (
-    <div className='App'>
+    <div className="App">
       <UserFormWithModal
         ref={modalRef}
         onSuccess={() => {
@@ -63,7 +67,7 @@ function App() {
         title={'Title'}
         extra={
           <Button
-            type='primary'
+            type="primary"
             onClick={() => {
               modalRef.current?.open({
                 title: 'Create Modal',
@@ -81,16 +85,23 @@ function App() {
             title: 'Id',
             dataIndex: 'id',
             key: 'id',
+            sorter: true,
           },
           {
             title: 'Name',
             dataIndex: 'name',
             key: 'name',
+
+            sorter: true,
           },
           {
             title: 'Sex',
             dataIndex: 'sex',
             key: 'sex',
+            filters: [
+              { text: '男', value: 'male' },
+              { text: '女', value: 'female' },
+            ],
           },
           {
             title: 'Action',
@@ -98,7 +109,7 @@ function App() {
             render: (_, record) => (
               <Space>
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => {
                     modalRef.current?.open({
                       title: 'edit',
@@ -111,7 +122,7 @@ function App() {
                   edit
                 </button>
                 <button
-                  type='button'
+                  type="button"
                   onClick={() => {
                     modalRef.current?.open({
                       title: 'view',
@@ -123,7 +134,7 @@ function App() {
                   view
                 </button>
                 <button
-                  type='button'
+                  type="button"
                   onClick={async () => {
                     const res = await fetch(`/api/users/${record.id}`, {
                       method: 'DELETE',
